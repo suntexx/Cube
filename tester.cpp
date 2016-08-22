@@ -4,9 +4,10 @@
 //#include <cstring>
 //#include <cstdlib>
 #include "global.h"
+#include "iTester.h"
 #include "tester.h"
 
-Tester::Tester(short* parts) {
+Tester::Tester(unsigned char* parts) {
   this->parts = this->clone(parts);
   this->storage = 0l;
 }
@@ -23,23 +24,29 @@ void Tester::load() {
   this->storage = 0l;
 }
 
-void Tester::int2move(short i, MOVE &m) {
-  m.axis = (short) ((i >> 2));
-  m.pos = (short) (i & 2);
-  m.dir = (i & 1) != 0;
-}
-
-MOVE Tester::int2move(short i) {
-  MOVE m;
-  m.axis = (short) ((i >> 2));
-  m.pos = (short) (i & 2);
-  m.dir = (i & 1) != 0;
-  return m;
-}
-
 void Tester::move2str(MOVE move, char* res) {
   sprintf(res, "[%i,%i,%i]", move.axis, move.pos, move.dir);
 }
+
+char* Tester::move2str(MOVE move) {
+  for (int i = 0; i < 24; i++) {
+    if (this->moves_str[i].move == move) return (char*) this->moves_str[i].str;
+  }
+
+  return NULL;
+};
+
+char* Tester::moves2str(MOVES* moves, const char* separator) {
+  size_t size = moves->count * (2 + strlen(separator)) + 1;
+  char* res = new char[size];
+  memset(res, 0, size);
+  for (int i = 0; i < moves->count; i++) {
+    strcat(res, this->move2str(moves->moves[i]));
+    if (separator) strcat(res, separator);
+  }
+
+  return res;
+};
 
 MOVES* Tester::addMoves(const MOVE move, MOVES* moves, bool begin) {
   if (!moves) {
@@ -118,72 +125,70 @@ MOVES* Tester::simplifyMoves(MOVES*&moves, bool second) {
   return moves = ((simplified) ? this->simplifyMoves(res, true) : res);
 }
 
-MOVES* Tester::testStep(int step_num, short* parts, MOVE* last, MOVE* last2) {
+MOVES* Tester::testStep(int step_num, unsigned char* parts, MOVE* last, MOVE* last2) {
   if (++step_num > this->max) return 0l;
 
-  short i;
-  short tmp[12][54] = { 0 };
+  unsigned char i;
+  unsigned char tmp[12][54];
+  memset(tmp, -1, sizeof(unsigned char) * 12 * 54);
 
   MOVES* result = 0;
   MOVES* moves = 0;
   MOVE move;
-//  this->parts = tmp;
+
   for (i = 12; i--;) {
-//    memcpy(tmp, parts, CUBE_SIZE);
-    move = this->int2move(i);
+    move = int2move(i);
+
+    // Skip back moves or rotation in same direction more than 2 times
     if (last && (move == !(*last) || (last2 && move == *last && move == *last2))) continue;
-//    if (last && (move == !(*last))) continue;
 
     memcpy(this->parts = tmp[i], parts, CUBE_SIZE);
+
     this->steps++;
     this->rotate(i >> 2, i & 2, i & 1);
+//    this->rotate(move);
 
     if (this->isSolved(tmp[i])) {
       std::cout << "found: " << step_num << " | " << this->steps << std::endl;
-      this->max = (short) (step_num - 1);//MIN(this->max, MAX(1, step_num - 1));
+      this->max = (unsigned char) (step_num - 1);//MIN(this->max, MAX(1, step_num - 1));
 
       this->parts = parts;
-      return this->addMoves(this->int2move(i), moves);
+      return this->addMoves(move, moves);
     }
-    /**** FASTEST (FIRST) SOLUTION **** /
-    if ((moves = this->testStep(step_num, tmp[i])) != 0) {
-      this->parts = parts;
-      return this->addMoves(this->int2move(i), moves);
-    }
-    /*/
+#ifdef METHOD_FASTEST
+//    std::cout << "1" << std::endl;
+    /**** FASTEST (FIRST) SOLUTION ****/
     if ((moves = this->testStep(step_num, tmp[i], &move, last)) != 0) {
       this->parts = parts;
       return this->addMoves(move, moves);
     }
     /**********************************/
+#endif
   }
 
-  /******* SHORTEST SOLUTION ******* /
-  for (i = 12; i--;) {
-    move = this->int2move(i);
-    if (tmp[i] && (moves = this->testStep(step_num, tmp[i], &move, last)) != 0) {
-      this->parts = parts;
-      result = this->addMoves(move, moves);
-//      if (step_num < 2) {
-//        MOVES* simpl = new MOVES;
-//        memcpy(simpl, moves, sizeof(MOVES));
-//        this->simplifyMoves(simpl);
-//        char* str = this->moves2str(simpl, " ");
-//        std::cout << step_num << " " << str << std::endl;
-//        delete[] str;
-//        delete simpl;
-//      }
+#ifndef METHOD_FASTEST
+  //  std::cout << "2" << std::endl;
+    /******* SHORTEST SOLUTION *******/
+    for (i = 12; i--;) {
+      move = this->int2move(i);
+      if (tmp[i][0] != (unsigned char) -1 && (moves = this->testStep(step_num, tmp[i], &move, last)) != 0) {
+        this->parts = parts;
+        result = this->addMoves(move, moves);
+      }
     }
-  }
-  /**********************************/
+    /**********************************/
+#endif
 
   this->parts = parts;
 
   return result;
 }
 
-MOVES* Tester::test(short max = 5) {
-  if (this->isSolved()) return 0;
+MOVES* Tester::test(unsigned char max = 5) {
+  if (this->isSolved()) {
+    std::cout << "already solved" << std::endl;
+    return 0;
+  }
   if (max < 0) max = 5;
   this->steps = 0;
   this->max = max;

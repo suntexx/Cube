@@ -6,110 +6,77 @@ class Cube {
 private:
   void reset();
 
-  const MOVE_STR moves_str[24] = {
-      { (MOVE) { 0, 0, 0 }, "L'" },
-      { (MOVE) { 0, 0, 1 }, "L" },
-      { (MOVE) { 0, 1, 0 }, "M'" },
-      { (MOVE) { 0, 1, 1 }, "M" },
-      { (MOVE) { 0, 2, 0 }, "R" },
-      { (MOVE) { 0, 2, 1 }, "R'" },
-
-      { (MOVE) { 0, 3, 0 }, "x" },
-      { (MOVE) { 0, 3, 1 }, "x'" },
-
-      { (MOVE) { 1, 0, 0 }, "U'" },
-      { (MOVE) { 1, 0, 1 }, "U" },
-      { (MOVE) { 1, 1, 0 }, "E'" },
-      { (MOVE) { 1, 1, 1 }, "E" },
-      { (MOVE) { 1, 2, 0 }, "D" },
-      { (MOVE) { 1, 2, 1 }, "D'" },
-
-      { (MOVE) { 1, 3, 0 }, "y'" },
-      { (MOVE) { 1, 3, 1 }, "y" },
-
-      { (MOVE) { 2, 0, 0 }, "F" },
-      { (MOVE) { 2, 0, 1 }, "F'" },
-      { (MOVE) { 2, 1, 0 }, "S'" },
-      { (MOVE) { 2, 1, 1 }, "S" },
-      { (MOVE) { 2, 2, 0 }, "B'" },
-      { (MOVE) { 2, 2, 1 }, "B" },
-
-      { (MOVE) { 2, 3, 0 }, "z" },
-      { (MOVE) { 2, 3, 1 }, "z'" },
-  };
-
 protected:
-  short* parts;
-//  short parts[54];
+  unsigned char* parts;
 
-  short* clone(short* parts, short* res = 0);
-
-  void removeClone(short*&parts);
-
-  void setSquare(short id, short val);
+  void setSquare(unsigned char id, unsigned char val);
 
 public:
+  unsigned char* clone(unsigned char* parts, unsigned char* res = 0);
+
+  void removeClone(unsigned char*&parts);
+
   Cube();
 
-  char* move2str(MOVE move);
+  Cube(unsigned char* parts);
 
-  char* moves2str(MOVES* moves, const char* separator = "");
-
-  short* setValues(short* parts);
+  unsigned char* setValues(unsigned char* parts);
 
   void setValues(char* parts);
 
-  short* getValues();
+  unsigned char* getValues();
 
-  short* getValues(short* destination);
+  unsigned char* getValues(unsigned char* destination);
 
-  static short mapX(short square, short position, short z);
+  static unsigned char mapX(unsigned char square, unsigned char position, unsigned char z);
 
-  void rotateX(short pos, bool dir);
+  static unsigned char mapY(unsigned char square, unsigned char position, unsigned char z);
+
+  static unsigned char mapZ(unsigned char square, unsigned char position, unsigned char z);
+
+private:
+  void rotateX(unsigned char pos, bool dir);
 
   void rotateXFull(bool dir);
 
-  static short mapY(short square, short position, short z);
-
-  void rotateY(short pos, short dir);
+  void rotateY(unsigned char pos, unsigned char dir);
 
   void rotateYFull(bool dir);
 
-  static short mapZ(short square, short position, short z);
-
-  void rotateZ(short pos, bool dir);
+  void rotateZ(unsigned char pos, bool dir);
 
   void rotateZFull(bool dir);
 
-  void rotateSide(short sq, bool dir);
+  void rotateSide(unsigned char sq, bool dir);
 
-  bool isSolved(short* parts = 0);
+public:
+  bool isSolved(unsigned char* parts = 0);
 
-  void rotate(short axis, short pos, bool dir);
+  void rotate(unsigned char axis, unsigned char pos, bool dir);
 
   void rotate(MOVE move);
 
-  void rotate(short i);
+  void rotate(unsigned char i);
 
-  static short getSquareNumID(short sq, short num);
+  static unsigned char getSquareNumID(unsigned char sq, unsigned char num);
 
-  void toString(char* str, short* parts = 0);
+  void toString(char* str, unsigned char* parts = 0);
 
   void shuffle(int);
 
-  /*short getColor(short id);
+  /*unsigned char getColor(unsigned char id);
 
-  short getColorNum(short sq, short num);
+  unsigned char getColorNum(unsigned char sq, unsigned char num);
 
-  short getColorXY(short sq, short x, short y);
+  unsigned char getColorXY(unsigned char sq, unsigned char x, unsigned char y);
 
-  static short id2square(short id);
+  static unsigned char id2square(unsigned char id);
 
-  static short id2col(short id);
+  static unsigned char id2col(unsigned char id);
 
-  static short id2row(short id);
+  static unsigned char id2row(unsigned char id);
 
-  static short getSquareXYID(short sq, short x, short y);*/
+  static unsigned char getSquareXYID(unsigned char sq, unsigned char x, unsigned char y);*/
   /*
   static void log();
 
@@ -117,7 +84,7 @@ public:
   static void log(int i, Rest...);
 
   template<typename ...Rest>
-  static void log(short s, Rest...);
+  static void log(unsigned char s, Rest...);
 
   template<typename ...Rest>
   static void log(float f, Rest...);

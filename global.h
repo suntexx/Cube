@@ -6,15 +6,17 @@
 #define MAX(a, b) (a > b ? a : b)
 #define random(a, b) (rand() % (MAX(a, b) - MIN(a, b)) + MIN(a, b))
 
-#define CUBE_SIZE (sizeof(short) * 54)
+#define CUBE_SIZE (sizeof(unsigned char) * 54)
+
+#define METHOD_FASTEST 1
 
 struct MOVE {
-  short axis;
-  short pos;
+  unsigned char axis;
+  unsigned char pos;
   bool dir;
 };
 struct MOVES {
-  short count;
+  unsigned char count;
   MOVE* moves;
 };
 struct MOVE_STR {
@@ -31,5 +33,7 @@ bool operator !=(const MOVE &a, const MOVE &b);
 bool operator ==(const MOVES &a, const MOVES &b);
 
 bool operator !=(const MOVES &a, const MOVES &b);
+
+MOVE int2move(unsigned char i) ;
 
 #endif //CUBE_GLOBAL_H
