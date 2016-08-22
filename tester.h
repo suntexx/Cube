@@ -4,7 +4,6 @@
 
 #include "global.h"
 #include "cube.h"
-//#include "iTester.h"
 
 class Tester : private Cube {
 private:

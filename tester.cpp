@@ -4,7 +4,6 @@
 //#include <cstring>
 //#include <cstdlib>
 #include "global.h"
-#include "iTester.h"
 #include "tester.h"
 
 Tester::Tester(unsigned char* parts) {

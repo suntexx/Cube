@@ -10,7 +10,7 @@
 #include "tester.h"
 
 #ifdef NDEBUG
-#define MAX_DEPTH 7
+#define MAX_DEPTH 8
 #define RANDOM_STEPS 999
 #else
 #define MAX_DEPTH 6
@@ -103,7 +103,7 @@ int main() {
 //  Cube::log("depth", MAX_DEPTH, "variants", x, "state", state, "\n");
 
   Tester* tester = new Tester(cube->getValues());
-  MOVES* moves = tester->test( MAX_DEPTH);
+  MOVES* moves = tester->test(MAX_DEPTH);
 
   if (moves) {
     char* str = 0;
