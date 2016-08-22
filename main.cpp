@@ -1,8 +1,6 @@
 #include <iostream>
-#include <stdlib.h>
 #include <cmath>
 #include <iomanip>
-#include <locale>
 #include <sstream>
 
 #include "global.h"
@@ -10,11 +8,12 @@
 #include "tester.h"
 
 #ifdef NDEBUG
-#define MAX_DEPTH 8
+#define METHOD_FASTEST 1
+#define MAX_DEPTH 7
 #define RANDOM_STEPS 999
 #else
-#define MAX_DEPTH 6
-#define RANDOM_STEPS 2//(MAX_DEPTH)
+#define MAX_DEPTH 5
+#define RANDOM_STEPS (MAX_DEPTH)
 #endif
 
 // BEST TIME FOR:
@@ -98,9 +97,7 @@ int main() {
   char state[55] = { 0 };
   cube->toString(state);
 
-//  std::cout << "Предпочитаемые пользователем настройки локали: " << std::locale("").name().c_str() << '\n';
   std::cout << "depth: " << MAX_DEPTH << " | combinations: " << FormatWithCommas(x) << " | state: " << state << std::endl;
-//  Cube::log("depth", MAX_DEPTH, "variants", x, "state", state, "\n");
 
   Tester* tester = new Tester(cube->getValues());
   MOVES* moves = tester->test(MAX_DEPTH);
@@ -109,16 +106,8 @@ int main() {
     char* str = 0;
     std::cout << "result: " << (str = tester->moves2str(moves, " ")) << std::endl;
     delete[] str;
-    /*for (i = 0; i < moves->count; i++) {
-  //      tester->move2str(moves->moves[i], m);
-  //      std::cout << m;
-        if ((str = cube->move2str(moves->moves[i])) != 0) std::cout << str << " ";
-      }//*/
-//    std::cout << "[" << moves << "]" << std::endl;
   }
   else std::cout << "not found | " << FormatWithCommas(tester->getSteps()) << " (-" << FormatWithCommas(x - tester->getSteps()) << ")" << std::endl;
-
-//  for (i = 0; i < 100; i++) std::cout << random(1, 10);
 
   return 0;
 }

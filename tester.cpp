@@ -1,8 +1,5 @@
 
 #include <iostream>
-//#include <stdio.h>
-//#include <cstring>
-//#include <cstdlib>
 #include "global.h"
 #include "tester.h"
 
@@ -148,15 +145,14 @@ MOVES* Tester::testStep(int step_num, unsigned char* parts, MOVE* last, MOVE* la
 //    this->rotate(move);
 
     if (this->isSolved(tmp[i])) {
-      std::cout << "found: " << step_num << " | " << this->steps << std::endl;
+      std::cout << "found: " << step_num << " | " << /*FormatWithCommas*/(this->steps) << std::endl;
       this->max = (unsigned char) (step_num - 1);//MIN(this->max, MAX(1, step_num - 1));
 
       this->parts = parts;
       return this->addMoves(move, moves);
     }
 #ifdef METHOD_FASTEST
-//    std::cout << "1" << std::endl;
-    /**** FASTEST (FIRST) SOLUTION ****/
+    /**** FASTEST (=FIRST) SOLUTION ****/
     if ((moves = this->testStep(step_num, tmp[i], &move, last)) != 0) {
       this->parts = parts;
       return this->addMoves(move, moves);
@@ -166,16 +162,15 @@ MOVES* Tester::testStep(int step_num, unsigned char* parts, MOVE* last, MOVE* la
   }
 
 #ifndef METHOD_FASTEST
-  //  std::cout << "2" << std::endl;
-    /******* SHORTEST SOLUTION *******/
-    for (i = 12; i--;) {
-      move = this->int2move(i);
-      if (tmp[i][0] != (unsigned char) -1 && (moves = this->testStep(step_num, tmp[i], &move, last)) != 0) {
-        this->parts = parts;
-        result = this->addMoves(move, moves);
-      }
+  /******* SHORTEST SOLUTION *******/
+  for (i = 12; i--;) {
+    move = int2move(i);
+    if (tmp[i][0] != (unsigned char) -1 && (moves = this->testStep(step_num, tmp[i], &move, last)) != 0) {
+      this->parts = parts;
+      result = this->addMoves(move, moves);
     }
-    /**********************************/
+  }
+  /**********************************/
 #endif
 
   this->parts = parts;
@@ -193,11 +188,11 @@ MOVES* Tester::test(unsigned char max = 5) {
   this->max = max;
 
   this->store();
-  clock_t start = clock();
+  clock_t start = clock(), end;
 
   MOVES* moves = this->testStep(0, this->parts);
-
-  std::cout << "time: " << ((float) (clock() - start) / CLOCKS_PER_SEC) << " sec" << std::endl;
+  end = clock();
+  std::cout << "time: " << ((float) (end - start) / CLOCKS_PER_SEC) << " sec" << std::endl;
 
   this->load();
   return this->simplifyMoves(moves);

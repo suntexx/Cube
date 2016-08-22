@@ -8,7 +8,6 @@
 
 #define CUBE_SIZE (sizeof(unsigned char) * 54)
 
-#define METHOD_FASTEST 1
 
 struct MOVE {
   unsigned char axis;
@@ -34,6 +33,9 @@ bool operator ==(const MOVES &a, const MOVES &b);
 
 bool operator !=(const MOVES &a, const MOVES &b);
 
-MOVE int2move(unsigned char i) ;
+MOVE int2move(unsigned char i);
+
+//template<typename T>
+//std::string FormatWithCommas(T value);
 
 #endif //CUBE_GLOBAL_H

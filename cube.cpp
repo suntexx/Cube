@@ -1,12 +1,7 @@
 
 #include <iostream>
-//#include <stdio.h>
-//#include <cstring>
-//#include <cstdlib>
 #include "global.h"
 #include "cube.h"
-//#include "tester.h"
-//#include "iTester.h"
 
 Cube::Cube() {
   this->parts = new unsigned char[54];
