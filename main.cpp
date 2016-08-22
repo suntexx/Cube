@@ -6,20 +6,16 @@
 #include <sstream>
 
 #include "global.h"
-//#include "iTester.h"
 #include "cube.h"
 #include "tester.h"
-//#include "tester2.h"
 
 #ifdef NDEBUG
 #define MAX_DEPTH 7
 #define RANDOM_STEPS 999
 #else
 #define MAX_DEPTH 6
-//#define RANDOM_STEPS 2//(MAX_DEPTH)
+#define RANDOM_STEPS 2//(MAX_DEPTH)
 #endif
-
-//#define METHOD "Shortest"
 
 // BEST TIME FOR:
 // x7 = 5.03735s // w/o backsteps 2.74905 (22.510.104 <- 23.384.604 <- 39.089.244)
